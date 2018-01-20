@@ -1,0 +1,439 @@
+' ###### SIMPLECALC ######
+
+
+
+' ~~~ Variable & Array Setup ~~~
+year = Clock.Year
+nullcommand = "§null"
+loadcomdb()
+
+
+
+' ~~~ Console Window Setup ~~~
+TextWindow.Show()
+TextWindow.Title = "SimpleCalc"
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "Black"
+Program.Delay(20)
+
+
+
+' ~~~ Welcome Text ~~~
+TextWindow.WriteLine("Welcome to SimpleCalc v.0.0.1!")
+TextWindow.WriteLine("(C)"+year+" - Benjamin Sykes & bIT-Works")
+
+
+
+' ~~~ Main Prompt ~~~
+MAINPROMPT:
+
+rawcommand = nullcommand
+
+If (command = "clear") Then
+  donothing()
+Else
+  TextWindow.WriteLine("")
+EndIf
+
+command = ""
+
+TextWindow.ForegroundColor = "DarkBlue"
+Program.Delay(20)
+TextWindow.Write(">>> ")
+TextWindow.ForegroundColor = "Blue"
+Program.Delay(20)
+rawcommand = TextWindow.Read()
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+command = Text.ConvertToLowerCase(rawcommand)
+
+If (command = "quit") Then
+  ' QUIT command
+  Goto CQUIT
+  
+ElseIf (command = "help") Or (command = "?") Then
+  ' HELP / ? command
+  Goto CHELP
+  
+ElseIf (command = "add") Then
+  ' ADD command
+  Goto CADD
+  
+ElseIf (command = "sub") Then
+  ' SUB command
+  Goto CSUB
+  
+ElseIf (command = "mult") Then
+  ' MULT command
+  Goto CMULT
+  
+ElseIf (command = "div") Then
+  ' DIV command
+  Goto CDIV
+  
+ElseIf (command = "clear") Then
+  ' CLEAR command
+  TextWindow.Clear()
+  Goto MAINPROMPT
+  
+ElseIf (command = "about") Then
+  ' ABOUT command
+  Goto CABOUT
+  
+Else
+  ' Invalid/No-command error
+  TextWindow.ForegroundColor = "Red"
+  Program.Delay(20)
+  If (command = nullcommand) Or (command = "") Then
+    TextWindow.WriteLine("Error! No command specified.")
+  Else
+    TextWindow.WriteLine("Error! The command specified, "+SPSpecialChars.Quotation+command+SPSpecialChars.Quotation+", is invalid.")
+  EndIf
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(20)
+  
+  Goto MAINPROMPT
+  
+EndIf
+
+
+
+' ~~~ HELP Command ~~~
+CHELP:
+
+TextWindow.ForegroundColor = "Green"
+Program.Delay(20)
+TextWindow.WriteLine("Installed commands:")
+TextWindow.ForegroundColor = "DarkGreen"
+Program.Delay(20)
+
+For comnum = 1 to comdb[0]
+  TextWindow.Write("   "+comdb[comnum])
+EndFor
+
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+SPTextWindow.ReturnLine()
+
+Goto MAINPROMPT
+
+
+
+' ~~~ QUIT Command ~~~
+CQUIT:
+
+TextWindow.ForegroundColor = "DarkYellow"
+Program.Delay(20)
+TextWindow.Write("Are you sure you want to quit [Y/N]? ")
+TextWindow.ForegroundColor = "Yellow"
+Program.Delay(20)
+
+QUITCONFIRM:
+
+rawquitkey = TextWindow.ReadKey()
+quitkey = Text.ConvertToLowerCase(rawquitkey)
+
+If (quitkey = "y") Then
+  TextWindow.WriteLine("Y")
+  
+  TextWindow.ForegroundColor = "Red"
+  Program.Delay(20)
+  TextWindow.Write("Quitting . . .")
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(1020)
+  
+  TextWindow.Clear()
+  TextWindow.Hide()
+  Program.End()
+ElseIf (quitkey = "n") Then
+  TextWindow.WriteLine("N")
+  
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(20)
+  
+  Goto MAINPROMPT
+Else
+  Goto QUITCONFIRM
+EndIf
+
+
+
+' ~~~ ADD Command ~~~
+CADD:
+
+TextWindow.ForegroundColor = "DarkYellow"
+Program.Delay(20)
+TextWindow.Write("How many numbers? ")
+TextWindow.ForegroundColor = "Yellow"
+Program.Delay(20)
+numcount = TextWindow.ReadNumber()
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+If (numcount < 2) Then
+  TextWindow.ForegroundColor = "Red"
+  Program.Delay(20)
+  TextWindow.WriteLine("Error! Invalid number count (<2).")
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(20)
+  Goto MAINPROMPT
+EndIf
+
+For numindex = 1 to numcount
+  TextWindow.ForegroundColor = "DarkGreen"
+  Program.Delay(20)
+  TextWindow.Write("Enter # "+numindex+" of "+numcount+": ")
+  TextWindow.ForegroundColor = "Green"
+  Program.Delay(20)
+  numlist[numindex] = TextWindow.ReadNumber()
+EndFor
+
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+output = 0
+For numindex = 1 to numcount
+  output = output + numlist[numindex]
+EndFor
+
+TextWindow.WriteLine("")
+TextWindow.Write(numlist[1])
+For numindex = 2 to numcount
+  TextWindow.Write(" + "+numlist[numindex])
+EndFor
+SPTextWindow.ReturnLine()
+
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "DarkGreen"
+Program.Delay(20)
+TextWindow.WriteLine(" = "+output+" ")
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "Black"
+Program.Delay(20)
+
+Goto MAINPROMPT
+
+
+
+' ~~~ SUB Command ~~~
+CSUB:
+
+TextWindow.ForegroundColor = "DarkYellow"
+Program.Delay(20)
+TextWindow.Write("How many numbers? ")
+TextWindow.ForegroundColor = "Yellow"
+Program.Delay(20)
+numcount = TextWindow.ReadNumber()
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+If (numcount < 2) Then
+  TextWindow.ForegroundColor = "Red"
+  Program.Delay(20)
+  TextWindow.WriteLine("Error! Invalid number count (<2).")
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(20)
+  Goto MAINPROMPT
+EndIf
+
+For numindex = 1 to numcount
+  TextWindow.ForegroundColor = "DarkGreen"
+  Program.Delay(20)
+  TextWindow.Write("Enter # "+numindex+" of "+numcount+": ")
+  TextWindow.ForegroundColor = "Green"
+  Program.Delay(20)
+  numlist[numindex] = TextWindow.ReadNumber()
+EndFor
+
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+output = 0
+For numindex = 1 to numcount
+  output = output - numlist[numindex]
+EndFor
+
+TextWindow.WriteLine("")
+TextWindow.Write(numlist[1])
+For numindex = 2 to numcount
+  TextWindow.Write(" - "+numlist[numindex])
+EndFor
+SPTextWindow.ReturnLine()
+
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "DarkGreen"
+Program.Delay(20)
+TextWindow.WriteLine(" = "+output+" ")
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "Black"
+Program.Delay(20)
+
+Goto MAINPROMPT
+
+
+
+' ~~~ MULT Command ~~~
+CMULT:
+
+TextWindow.ForegroundColor = "DarkYellow"
+Program.Delay(20)
+TextWindow.Write("How many numbers? ")
+TextWindow.ForegroundColor = "Yellow"
+Program.Delay(20)
+numcount = TextWindow.ReadNumber()
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+If (numcount < 2) Then
+  TextWindow.ForegroundColor = "Red"
+  Program.Delay(20)
+  TextWindow.WriteLine("Error! Invalid number count (<2).")
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(20)
+  Goto MAINPROMPT
+EndIf
+
+For numindex = 1 to numcount
+  TextWindow.ForegroundColor = "DarkGreen"
+  Program.Delay(20)
+  TextWindow.Write("Enter # "+numindex+" of "+numcount+": ")
+  TextWindow.ForegroundColor = "Green"
+  Program.Delay(20)
+  numlist[numindex] = TextWindow.ReadNumber()
+EndFor
+
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+output = 0
+For numindex = 1 to numcount
+  output = output * numlist[numindex]
+EndFor
+
+TextWindow.WriteLine("")
+TextWindow.Write(numlist[1])
+For numindex = 2 to numcount
+  TextWindow.Write(" * "+numlist[numindex])
+EndFor
+SPTextWindow.ReturnLine()
+
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "DarkGreen"
+Program.Delay(20)
+TextWindow.WriteLine(" = "+output+" ")
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "Black"
+Program.Delay(20)
+
+Goto MAINPROMPT
+
+
+
+' ~~~ DIV Command ~~~
+CDIV:
+
+TextWindow.ForegroundColor = "DarkYellow"
+Program.Delay(20)
+TextWindow.Write("How many numbers? ")
+TextWindow.ForegroundColor = "Yellow"
+Program.Delay(20)
+numcount = TextWindow.ReadNumber()
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+If (numcount < 2) Then
+  TextWindow.ForegroundColor = "Red"
+  Program.Delay(20)
+  TextWindow.WriteLine("Error! Invalid number count (<2).")
+  TextWindow.ForegroundColor = "White"
+  Program.Delay(20)
+  Goto MAINPROMPT
+EndIf
+
+For numindex = 1 to numcount
+  TextWindow.ForegroundColor = "DarkGreen"
+  Program.Delay(20)
+  TextWindow.Write("Enter # "+numindex+" of "+numcount+": ")
+  TextWindow.ForegroundColor = "Green"
+  Program.Delay(20)
+  numlist[numindex] = TextWindow.ReadNumber()
+EndFor
+
+TextWindow.ForegroundColor = "White"
+Program.Delay(20)
+
+output = 0
+For numindex = 1 to numcount
+  output = output / numlist[numindex]
+EndFor
+
+TextWindow.WriteLine("")
+TextWindow.Write(numlist[1])
+For numindex = 2 to numcount
+  TextWindow.Write(" / "+numlist[numindex])
+EndFor
+SPTextWindow.ReturnLine()
+
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "DarkGreen"
+Program.Delay(20)
+TextWindow.WriteLine(" = "+output+" ")
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "Black"
+Program.Delay(20)
+
+Goto MAINPROMPT
+
+
+
+' ~~~ ABOUT Command ~~
+CABOUT:
+
+TextWindow.ForegroundColor = "Black"
+TextWindow.BackgroundColor = "White"
+Program.Delay(20)
+TextWindow.Clear()
+
+TextWindow.WriteLine("SIMPLECALC VERSION 0.0.1")
+TextWindow.WriteLine("(C)"+year+" - Benjamin Sykes & bIT-Works")
+TextWindow.WriteLine("")
+TextWindow.WriteLine("Created with Microsoft Small Basic v1.2")
+TextWindow.WriteLine("")
+
+TextWindow.ForegroundColor = "Gray"
+Program.Delay(20)
+TextWindow.Write("Press any key . . .")
+TextWindow.PauseWithoutMessage()
+
+TextWindow.ForegroundColor = "White"
+TextWindow.BackgroundColor = "Black"
+Program.Delay(20)
+TextWindow.Clear()
+
+Goto MAINPROMPT
+
+
+
+' ~~~ Command DataBase Loader ~~~
+Sub loadcomdb
+  comdb[0] = 9 ' --> Number of commands installed
+  
+  ' List of commands installed
+  comdb[1] = "about"
+  comdb[2] = "clear"
+  comdb[3] = "quit"
+  comdb[4] = "help"
+  comdb[5] = "?"
+  comdb[6] = "add"
+  comdb[7] = "sub"
+  comdb[8] = "mult"
+  comdb[9] = "div"
+EndSub
+
+
+
+' ~~~ Donothing Subroutine ~~~
+Sub donothing
+  ' Do nothing at all
+EndSub
